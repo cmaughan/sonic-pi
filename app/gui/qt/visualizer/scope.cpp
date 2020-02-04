@@ -71,6 +71,10 @@ Scope::Scope(int scsynthPort, QWidget* parent)
     m_panels.push_back({ "Mono", "Mono", ScopeType::Mono });
     m_panels.push_back({ "Mirror Stereo", "Stereo", ScopeType::MirrorStereo });
 
+    Panel polar("Polar Stereo", "Polar Stereo", ScopeType::PolarStereo);
+    polar.requireFFT = true;
+    m_panels.push_back(polar);
+
     Panel spec({ "Spectrum", "Spectrum", ScopeType::SpectrumAnalysis });
     spec.requireFFT = true;
     m_panels.push_back(spec);
@@ -198,6 +202,59 @@ void Scope::DrawMirrorStereo(QPainter& painter, Panel& panel)
     */
 }
 
+// Draw a Simple Stereo representation with a mirror of right/left stereo
+void Scope::DrawPolarStereo(QPainter& painter, Panel& panel)
+{
+    if (m_spectrumQuantized[0].empty())
+    {
+        return;
+    }
+
+    // Make a list of points; it's better to gather them and submit in a batch
+    // Here we are just drawing in pixel space
+    // Note: resize will be a no-op when it doesn't change ;)
+    panel.wavePoints.resize(m_spectrumQuantized->size() * 2, QPoint(0, 0));
+
+    float scale;
+    if (panel.rcGraph.height() < panel.rcGraph.width())
+    {
+        scale = panel.rcGraph.height() / 2;
+    }
+    else
+    {
+        scale = panel.rcGraph.height() / 2;
+    }
+
+    QPoint center = panel.rcGraph.center();
+
+    int wavePoints = int(panel.wavePoints.size());
+    int rightIndex = int(wavePoints - 2) / 2;
+    for (int point = 0; point < rightIndex; point++)
+    {
+        auto sampleLeft = m_spectrumQuantized[0][point] * scale * .5f;
+        auto sampleRight = m_spectrumQuantized[1][point] * scale * .5f;
+        sampleLeft = abs(sampleLeft);
+        sampleRight = -abs(sampleRight);
+
+        float angle = (point / float(rightIndex)) * 3.1415926 * 2.0f;
+        auto sinAngle = sin(angle);
+        auto cosAngle = cos(angle);
+
+        float offset = scale / 2.0f;
+        panel.wavePoints[point] = center + QPoint(sinAngle * (offset + sampleLeft), cosAngle * (offset + sampleLeft));
+
+        panel.wavePoints[rightIndex + point + 1] = center + QPoint(sinAngle * (offset + sampleRight), cosAngle * (offset + sampleRight));
+    }
+    // Complete the loop
+    panel.wavePoints[rightIndex] = panel.wavePoints[0];
+    panel.wavePoints[panel.wavePoints.size() - 1] = panel.wavePoints[rightIndex + 1];
+
+    painter.setPen(panel.pen2);
+    painter.drawPolyline(&panel.wavePoints[0], rightIndex + 1);
+    painter.setPen(panel.pen);
+    painter.drawPolyline(&panel.wavePoints[rightIndex + 1], rightIndex + 1);
+}
+
 // Draw a Simple Wave
 void Scope::DrawWave(QPainter& painter, Panel& panel)
 {
@@ -306,6 +363,10 @@ void Scope::paintEvent(QPaintEvent* pEv)
         else if (panel.type == ScopeType::SpectrumAnalysis)
         {
             DrawSpectrumAnalysis(painter, panel);
+        }
+        else if (panel.type == ScopeType::PolarStereo)
+        {
+            DrawPolarStereo(painter, panel);
         }
     }
 }
