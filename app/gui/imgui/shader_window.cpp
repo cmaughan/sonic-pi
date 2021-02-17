@@ -16,6 +16,7 @@ Fbo fbo[2];
 uint32_t currentFBO = 0;
 uint32_t vao = 0;
 uint32_t vbo = 0;
+uint32_t ibo = 0;
 uint32_t iTimeParam = 0;
 uint32_t iChannel0 = 0;
 uint32_t iResolutionParam = 0;
@@ -30,8 +31,8 @@ uint32_t renderCount = 0;
 std::string strVShader = R"(
 #version 330
 
-in vec3 positionsIn;
-in vec2 texCoordsIn;
+layout(location = 0) in vec3 positionsIn;
+layout(location = 1) in vec2 texCoordsIn;
 
 out vec2 texCoord;
 
@@ -99,7 +100,7 @@ auto Coords = std::array<float, 20>{ -1.0f, -1.0f, 0.0f,
     1.0f, 0.0f,
     1.0f, 1.0f,
     0.0f, 1.0f };
-
+auto Indices = std::array<uint32_t, 6>{ 0, 1, 2, 0,2, 3 };
 void dump_shader_errors(std::shared_ptr<GLCompileResult> spResult)
 {
     if (spResult->Id != 0 && spResult->messages.empty())
@@ -150,12 +151,15 @@ void shader_window_init()
 
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 4));
         glBufferData(GL_ARRAY_BUFFER, Coords.size() * sizeof(float), &Coords[0], GL_STATIC_DRAW);
+
+        glGenBuffers(1, &ibo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(uint32_t), &Indices[0], GL_STATIC_DRAW);
 
         glBindVertexArray(0);
         glUseProgram(0);
@@ -224,7 +228,7 @@ void shader_window_show()
     glUniform2f(iResolutionParam, float(size.x), float(size.y));
     glUniform4f(iSpectrum, s1, s2, s3, s4);
 
-    glDrawArrays(GL_QUADS, 0, 4);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     glUseProgram(0);
 
