@@ -15,6 +15,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/cmake/demo_common.cmake)
 find_package(gl3w CONFIG REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_path(STB_INCLUDE_DIRS "stb.h")
 
 set(SPIMGUI_APP_SOURCE
     ${APP_ROOT}/main.cpp
@@ -31,6 +32,8 @@ set(SPIMGUI_APP_SOURCE
     ${APP_ROOT}/cue_window.h
     ${APP_ROOT}/midi_window.cpp
     ${APP_ROOT}/midi_window.h
+    ${APP_ROOT}/shader_window.cpp
+    ${APP_ROOT}/shader_window.h
     ${APP_ROOT}/CMakeLists.txt
 
     )
@@ -54,6 +57,18 @@ set(SPIMGUI_IMGUI_SOURCE
     ${APP_ROOT}/backends/imgui_impl_sdl.h
 )
 
+set(SPIMGUI_GRAPHICS_SOURCE
+    ${APP_ROOT}/graphics/gl_buffer.cpp
+    ${APP_ROOT}/graphics/gl_buffer.h
+    ${APP_ROOT}/graphics/gl_fbo.cpp
+    ${APP_ROOT}/graphics/gl_fbo.h
+    ${APP_ROOT}/graphics/gl_helpers.h
+    ${APP_ROOT}/graphics/gl_shader.cpp
+    ${APP_ROOT}/graphics/gl_shader.h
+    ${APP_ROOT}/graphics/gl_texture.cpp
+    ${APP_ROOT}/graphics/gl_texture.h 
+)
+
 set(RESOURCE_FOLDER ${CMAKE_CURRENT_LIST_DIR}/res)
 add_project_meta(META_FILES_TO_INCLUDE ${APP_ROOT}/res/app.manifest)
 
@@ -61,6 +76,7 @@ add_executable (${APP_NAME}
     ${OS_BUNDLE}
     ${SPIMGUI_APP_SOURCE}
     ${SPIMGUI_IMGUI_SOURCE}
+    ${SPIMGUI_GRAPHICS_SOURCE}
     ${META_FILES_TO_INCLUDE}
     )
 
@@ -70,6 +86,7 @@ target_include_directories(${APP_NAME}
     ${APP_ROOT}/backends
     ${CMAKE_CURRENT_LIST_DIR} 
     ${CMAKE_BINARY_DIR}
+    ${STB_INCLUDE_DIRS}
     )
 
 # Extras for compiling on PI:  Use ES2
@@ -99,4 +116,5 @@ endif()
 
 source_group ("App" FILES ${SPIMGUI_APP_SOURCE})
 source_group ("ImGui" FILES ${SPIMGUI_IMGUI_SOURCE})
+source_group ("Graphics" FILES ${SPIMGUI_GRAPHICS_SOURCE})
 

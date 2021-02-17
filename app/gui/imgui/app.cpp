@@ -9,10 +9,12 @@
 #include "log_window.h"
 #include "midi_window.h"
 #include "scope_window.h"
+#include "shader_window.h"
 
 #include "main_menu.h"
 
 #include "api/string_utils.h"
+
 using namespace SonicPi;
 
 SPData sonic;
@@ -178,8 +180,8 @@ void end_main_window()
 void show_sonic_pi()
 {
     static bool open = true;
-
     begin_main_window();
+    shader_window_show();
     log_window_show(&open);
     edit_window_show();
     cue_window_show();
@@ -191,5 +193,6 @@ void show_sonic_pi()
 
 void cleanup_ui()
 {
+    shader_window_close();
     edit_window_close();
 }

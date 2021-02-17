@@ -152,4 +152,11 @@ uint32_t string_number_from_name(const std::string& name)
     return 0;
 }
 
+std::string string_tolower(const std::string& str)
+{
+    std::string copy = str;
+    std::transform(copy.begin(), copy.end(), copy.begin(), ::tolower);
+    return copy;
+}
+
 } // namespace SonicPi 

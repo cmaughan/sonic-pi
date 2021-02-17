@@ -33,6 +33,7 @@ struct SPData
     std::mutex guiMutex;
 
     bool exit = false;
+    float backgroundAlpha = 0.1f;
 };
 extern SPData sonic;
 
@@ -41,3 +42,5 @@ bool sync_sonic_pi();
 void stop_sonic_pi();
 void show_sonic_pi();
 void cleanup_ui();
+
+

@@ -27,4 +27,6 @@ std::string random_string(std::string::size_type length);
 std::string string_number_name(int i);
 uint32_t string_number_from_name(const std::string& name);
 
+std::string string_tolower(const std::string& str);
+
 } // namespace SonicPi 

@@ -198,10 +198,15 @@ int main(int, char**)
 
     // Our state
     bool show_demo_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 
     // Main loop
+    //#define NO_WAIT_SYNC
+    #ifdef NO_WAIT_SYNC
+    bool done = false;
+    #else
     bool done = !sync_sonic_pi();
+    #endif
     while (!done)
     {
         // Poll and handle events (inputs, window resize, etc.)
@@ -218,6 +223,11 @@ int main(int, char**)
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
         }
+
+        ImGui::GetStyle().Colors[ImGuiCol_ChildBg].w = sonic.backgroundAlpha;
+        ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = sonic.backgroundAlpha;
+        ImGui::GetStyle().Colors[ImGuiCol_DockingEmptyBg].w = 0.0f;
+        //sonic.backgroundAlpha;
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();

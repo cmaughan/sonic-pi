@@ -1165,7 +1165,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
     mCursorPositionChanged = false;
 
     auto bg = ImGui::ColorConvertU32ToFloat4(mPalette[(int)PaletteIndex::Background]);
-    auto bg2 = ImVec4(.8f, .3f, .1f, 1.0f);
+    bg.w = sonic.backgroundAlpha;
+    auto bg2 = ImVec4(.8f, .3f, .1f, sonic.backgroundAlpha);
     auto flashTime = timer_stop(FlashStartTime);
     if (flashTime < .5f)
     {

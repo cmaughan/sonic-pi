@@ -17,7 +17,7 @@ if not exist "vcpkg\vcpkg.exe" (
 
 cd vcpkg
 echo Installing Libraries 
-vcpkg install kissfft fmt crossguid sdl2 gl3w reproc gsl-lite concurrentqueue platform-folders catch2 --triplet x64-windows-static-md --recurse
+vcpkg install stb kissfft fmt crossguid sdl2 gl3w reproc gsl-lite concurrentqueue platform-folders catch2 --triplet x64-windows-static-md --recurse
 
 cd %~dp0
 

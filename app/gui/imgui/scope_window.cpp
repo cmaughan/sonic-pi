@@ -82,3 +82,15 @@ void scope_window_add(const ProcessedAudio& audio)
     spectrum[0] = audio.m_spectrumQuantized[0];
     spectrum[1] = audio.m_spectrumQuantized[1];
 }
+
+// Quick hack to quantize for a single beat
+void scope_window_get_spectrum(float& s1, float& s2, float& s3, float& s4)
+{
+    if (spectrum[0].size() < 8)
+        return;
+
+    s1 = spectrum[0][1];
+    s2 = spectrum[1][2];
+    s3 = spectrum[0][3];
+    s4 = spectrum[1][4];
+}

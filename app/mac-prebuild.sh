@@ -20,7 +20,7 @@ fi
 triplet=(x64-osx)
 
 cd vcpkg
-./vcpkg install kissfft fmt sdl2 gl3w reproc gsl-lite concurrentqueue platform-folders catch2 --triplet ${triplet[0]} --recurse
+./vcpkg install stb kissfft fmt sdl2 gl3w reproc gsl-lite concurrentqueue platform-folders catch2 --triplet ${triplet[0]} --recurse
 
 cd ${SCRIPT_DIR}
 
