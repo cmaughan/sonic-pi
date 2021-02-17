@@ -24,6 +24,8 @@
 debug/
 release/
 relwithdebinfo/
+cmake-build-debug/
+.idea
 
 # Build directories
 build

@@ -49,6 +49,8 @@ void fbo_resize(Fbo& fbo, const Vec2i& newFboSize)
         return;
     }
 
+    fbo.size.x = std::min(2, fbo.size.x);
+    fbo.size.y = std::min(2, fbo.size.y);
     fbo.size = newFboSize;
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo.fbo);

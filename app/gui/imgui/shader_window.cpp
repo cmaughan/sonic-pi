@@ -28,7 +28,7 @@ uint32_t renderCount = 0;
 // Based on:
 // https://www.shadertoy.com/view/4lSyRw
 std::string strVShader = R"(
-#version 130
+#version 330
 
 in vec3 positionsIn;
 in vec2 texCoordsIn;
@@ -41,7 +41,7 @@ void main() {
 )";
 
 std::string strShader = R"(
-#version 130
+#version 330
 
 out vec4 fragColor;
 
