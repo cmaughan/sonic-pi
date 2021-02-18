@@ -1,5 +1,6 @@
 #include <random>
 #include <cassert>
+#include <algorithm>
 #include "api/string_utils.h"
 
 namespace SonicPi
