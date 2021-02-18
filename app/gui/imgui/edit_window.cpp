@@ -728,7 +728,7 @@ void TextEditor::HandleKeyboardInputs()
     ImGuiIO& io = ImGui::GetIO();
     auto shift = io.KeyShift;
     auto ctrl = io.ConfigMacOSXBehaviors ? io.KeySuper : io.KeyCtrl;
-    auto alt = io.ConfigMacOSXBehaviors ? io.KeyCtrl : io.KeyAlt;
+    auto alt = io.KeyAlt;
 
     if (ImGui::IsWindowFocused())
     {
@@ -795,12 +795,14 @@ void TextEditor::HandleKeyboardInputs()
         {
             edit_run();
             EnsureCursorVisible();
+            return;
         }
         else if (alt && io.KeysDown[SDL_SCANCODE_S])
         {
             auto text = editor.GetText();
             sonic.spApi->Stop();
             EnsureCursorVisible();
+            return;
         }
 
         if (!IsReadOnly() && !io.InputQueueCharacters.empty())
@@ -1166,9 +1168,9 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 
     auto bg = ImGui::ColorConvertU32ToFloat4(mPalette[(int)PaletteIndex::Background]);
     bg.w = sonic.backgroundAlpha;
-    auto bg2 = ImVec4(.8f, .3f, .1f, sonic.backgroundAlpha);
+    auto bg2 = ImVec4(.8f, .3f, .1f, 1.0f);
     auto flashTime = timer_stop(FlashStartTime);
-    if (flashTime < .5f)
+    if (flashTime < 1.0f)
     {
         bg = blend(bg2, bg, flashTime * 2.0f);
         ImGui::SetNextWindowFocus();
